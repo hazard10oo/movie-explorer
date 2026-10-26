@@ -33,12 +33,16 @@ function App() {
       <div className="movies-grid">
         {movies.map((movie) => (
           <div key={movie.id} className="movie-card">
-            <img
-              src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-              alt={movie.title}
-            />
+            {movie.poster_path ? (
+              <img
+                src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                alt={movie.title}
+              />
+            ) : (
+              <div className="no-poster">No poster</div>
+            )}
             <h3>{movie.title}</h3>
-            <p>{movie.vote_average}</p>
+            <p>{movie.vote_average ? movie.vote_average.toFixed(1) : "N/A"}</p>
           </div>
         ))}
       </div>
