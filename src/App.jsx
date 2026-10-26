@@ -9,31 +9,35 @@ function App() {
   const [query, setQuery] = useState("");
 
   useEffect(() => {
-    setLoading(true);
-    setError(null);
+    const timer = setTimeout(() => {
+      setLoading(true);
+      setError(null);
 
-    let url;
+      let url;
 
-    if (query === "") {
-      url = `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}`;
-    } else {
-      url = `https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(query)}`;
-    }
+      if (query === "") {
+        url = `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}`;
+      } else {
+        url = `https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(query)}`;
+      }
 
-    fetch(url)
-      .then((res) => {
-        if (!res.ok) throw new Error("Failed to load movies");
-        return res.json();
-      })
-      .then((data) => {
-        setMovies(data.results);
-      })
-      .catch((err) => {
-        setError(err.message);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+      fetch(url)
+        .then((res) => {
+          if (!res.ok) throw new Error("Failed to load movies");
+          return res.json();
+        })
+        .then((data) => {
+          setMovies(data.results);
+        })
+        .catch((err) => {
+          setError(err.message);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }, 500);
+
+    return () => clearTimeout(timer);
   }, [query]);
 
   return (
@@ -47,6 +51,7 @@ function App() {
       />
       {loading && <p>Loading...</p>}
       {error && <p>{error}</p>}
+      {!loading && !error && movies.length === 0 && <p>No movies found</p>}
       {!loading && !error && (
         <div className="movies-grid">
           {movies.map((movie) => (
