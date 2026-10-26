@@ -3,6 +3,7 @@ body {
   background: #141414;
   color: #fff;
   font-family: Arial, sans-serif;
+  text-align: center;
 }
 
 .movies-grid {
@@ -17,7 +18,6 @@ body {
   border-radius: 8px;
   overflow: hidden;
   transition: transform 0.2s;
-  text-align: center;
 }
 
 .movie-card img {

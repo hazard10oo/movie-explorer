@@ -4,30 +4,45 @@ const API_KEY = import.meta.env.VITE_TMDB_KEY;
 
 function App() {
   const [movies, setMovies] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     fetch(`https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}`)
-      .then((response) => response.json())
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to load movies");
+        return res.json();
+      })
       .then((data) => {
         setMovies(data.results);
-        console.log(data.results);
+      })
+      .catch((err) => {
+        setError(err.message);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   }, []);
 
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>{error}</p>;
+
   return (
-    <div className="movies-grid">
-      {movies.map((movie) => (
-        <div key={movie.id} className="movie-card">
-          <img
-            src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-            alt={movie.title}
-            srcset=""
-          />
-          <h3>{movie.title}</h3>
-          <p>{movie.vote_average}</p>
-        </div>
-      ))}
-    </div>
+    <>
+      <h1>Movie Explorer</h1>
+      <div className="movies-grid">
+        {movies.map((movie) => (
+          <div key={movie.id} className="movie-card">
+            <img
+              src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+              alt={movie.title}
+            />
+            <h3>{movie.title}</h3>
+            <p>{movie.vote_average}</p>
+          </div>
+        ))}
+      </div>
+    </>
   );
 }
 
