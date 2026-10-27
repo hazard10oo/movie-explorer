@@ -7,6 +7,10 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [query, setQuery] = useState("");
+  const [favorites, setFavorites] = useState(() => {
+    const saved = localStorage.getItem("favorites");
+    return saved ? JSON.parse(saved) : [];
+  });
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -40,6 +44,20 @@ function App() {
     return () => clearTimeout(timer);
   }, [query]);
 
+  useEffect(() => {
+    localStorage.setItem("favorites", JSON.stringify(favorites));
+  }, [favorites]);
+
+  function toggleFavorite(movie) {
+    const exist = favorites.some((f) => f.id === movie.id);
+
+    if (exist) {
+      setFavorites(favorites.filter((f) => f.id !== movie.id));
+    } else {
+      setFavorites([...favorites, movie]);
+    }
+  }
+
   return (
     <>
       <h1>Movie Explorer</h1>
@@ -68,6 +86,9 @@ function App() {
               <p>
                 {movie.vote_average ? movie.vote_average.toFixed(1) : "N/A"}
               </p>
+              <button onClick={() => toggleFavorite(movie)}>
+                {favorites.some((f) => f.id === movie.id) ? "❤️" : "🤍"}
+              </button>
             </div>
           ))}
         </div>
