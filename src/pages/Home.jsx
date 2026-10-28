@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 const API_KEY = import.meta.env.VITE_TMDB_KEY;
 
@@ -74,21 +75,23 @@ function Home() {
         <div className="movies-grid">
           {movies.map((movie) => (
             <div key={movie.id} className="movie-card">
-              {movie.poster_path ? (
-                <img
-                  src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-                  alt={movie.title}
-                />
-              ) : (
-                <div className="no-poster">No poster</div>
-              )}
-              <h3>{movie.title}</h3>
-              <p>
-                {movie.vote_average ? movie.vote_average.toFixed(1) : "N/A"}
-              </p>
+              <Link to={`/movie/${movie.id}`}>
+                {movie.poster_path ? (
+                  <img
+                    src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`}
+                    alt={movie.title}
+                  />
+                ) : (
+                  <div className="no-poster">No poster</div>
+                )}
+                <h3>{movie.title}</h3>
+              </Link>
               <button onClick={() => toggleFavorite(movie)}>
                 {favorites.some((f) => f.id === movie.id) ? "❤️" : "🤍"}
               </button>
+              <p>
+                {movie.vote_average ? movie.vote_average.toFixed(1) : "N/A"}
+              </p>
             </div>
           ))}
         </div>
