@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import useFavorites from "../hooks/useFavorites";
 
 const API_KEY = import.meta.env.VITE_TMDB_KEY;
 
@@ -8,10 +9,7 @@ function Home() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [query, setQuery] = useState("");
-  const [favorites, setFavorites] = useState(() => {
-    const saved = localStorage.getItem("favorites");
-    return saved ? JSON.parse(saved) : [];
-  });
+  const { favorites, toggleFavorite } = useFavorites();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -44,20 +42,6 @@ function Home() {
 
     return () => clearTimeout(timer);
   }, [query]);
-
-  useEffect(() => {
-    localStorage.setItem("favorites", JSON.stringify(favorites));
-  }, [favorites]);
-
-  function toggleFavorite(movie) {
-    const exist = favorites.some((f) => f.id === movie.id);
-
-    if (exist) {
-      setFavorites(favorites.filter((f) => f.id !== movie.id));
-    } else {
-      setFavorites([...favorites, movie]);
-    }
-  }
 
   return (
     <>

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
+import useFavorites from "../hooks/useFavorites";
 
 const API_KEY = import.meta.env.VITE_TMDB_KEY;
 
@@ -8,6 +9,7 @@ function MovieDetails() {
   const [movie, setMovie] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { favorites, toggleFavorite } = useFavorites();
 
   useEffect(() => {
     fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=${API_KEY}`)
@@ -65,6 +67,10 @@ function MovieDetails() {
           {movie.tagline && <p className="tagline">{movie.tagline}</p>}
           {meta && <p>{meta}</p>}
           <p>⭐ {movie.vote_average ? movie.vote_average.toFixed(1) : "N/A"}</p>
+
+          <button className="fav-btn" onClick={() => toggleFavorite(movie)}>
+            {favorites.some((f) => f.id === movie.id) ? "❤️" : "🤍"}
+          </button>
 
           <div className="genres">
             {movie.genres.map((genre) => (
