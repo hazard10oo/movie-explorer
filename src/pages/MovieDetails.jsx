@@ -44,43 +44,68 @@ function MovieDetails() {
   const year = movie.release_date ? movie.release_date.slice(0, 4) : null;
   const runtime = movie.runtime ? `${movie.runtime} min` : null;
   const meta = [year, runtime].filter(Boolean).join(" • ");
+  const backdropUrl = movie.backdrop_path
+    ? `https://image.tmdb.org/t/p/w1280${movie.backdrop_path}`
+    : null;
 
   return (
-    <div className="details-page">
-      <Link to="/" className="back-link">
-        ← Back
-      </Link>
+    <div
+      className="details-backdrop"
+      style={
+        backdropUrl
+          ? {
+              backgroundImage: `linear-gradient(rgba(20,20,20,0.85), #141414), url(${backdropUrl})`,
+            }
+          : undefined
+      }
+    >
+      <div className="details-page">
+        {
+          <div className="details-page">
+            <Link to="/" className="back-link">
+              ← Back
+            </Link>
 
-      <div className="details">
-        {movie.poster_path ? (
-          <img
-            className="details-poster"
-            src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-            alt={movie.title}
-          />
-        ) : (
-          <div className="no-poster details-poster">No poster</div>
-        )}
+            <div className="details">
+              {movie.poster_path ? (
+                <img
+                  className="details-poster"
+                  src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                  alt={movie.title}
+                />
+              ) : (
+                <div className="no-poster details-poster">No poster</div>
+              )}
 
-        <div className="details-info">
-          <h1>{movie.title}</h1>
-          {movie.tagline && <p className="tagline">{movie.tagline}</p>}
-          {meta && <p>{meta}</p>}
-          <p>⭐ {movie.vote_average ? movie.vote_average.toFixed(1) : "N/A"}</p>
+              <div className="details-info">
+                <h1>{movie.title}</h1>
+                {movie.tagline && <p className="tagline">{movie.tagline}</p>}
+                {meta && <p>{meta}</p>}
+                <p>
+                  ⭐{" "}
+                  {movie.vote_average ? movie.vote_average.toFixed(1) : "N/A"}
+                </p>
 
-          <button className="fav-btn" onClick={() => toggleFavorite(movie)}>
-            {favorites.some((f) => f.id === movie.id) ? "❤️" : "🤍"}
-          </button>
+                <button
+                  className="fav-btn"
+                  aria-label="Toggle favorite"
+                  onClick={() => toggleFavorite(movie)}
+                >
+                  {favorites.some((f) => f.id === movie.id) ? "❤️" : "🤍"}
+                </button>
 
-          <div className="genres">
-            {movie.genres.map((genre) => (
-              <span key={genre.id}>{genre.name}</span>
-            ))}
+                <div className="genres">
+                  {movie.genres.map((genre) => (
+                    <span key={genre.id}>{genre.name}</span>
+                  ))}
+                </div>
+
+                <h3>Overview</h3>
+                <p>{movie.overview || "No overview available."}</p>
+              </div>
+            </div>
           </div>
-
-          <h3>Overview</h3>
-          <p>{movie.overview || "No overview available."}</p>
-        </div>
+        }
       </div>
     </div>
   );
