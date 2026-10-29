@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import SearchIcon from "./SearchIcon";
 
 const API_KEY = import.meta.env.VITE_TMDB_KEY;
@@ -8,6 +8,18 @@ const FEATURED = ["Action", "Comedy", "Drama", "Horror"];
 function Navbar() {
   const [genres, setGenres] = useState([]);
   const [open, setOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [text, setText] = useState("");
+  const navigate = useNavigate();
+
+  function handleSearch(e) {
+    e.preventDefault();
+    const q = text.trim();
+    if (!q) return;
+    navigate(`/?q=${encodeURIComponent(q)}`);
+    setSearchOpen(false);
+    setText("");
+  }
 
   useEffect(() => {
     fetch(`https://api.themoviedb.org/3/genre/movie/list?api_key=${API_KEY}`)
@@ -72,9 +84,26 @@ function Navbar() {
         </div>
       </nav>
 
-      <button className="navbar-search-btn" aria-label="Search">
-        <SearchIcon />
-      </button>
+      <div className="navbar-search">
+        {searchOpen && (
+          <form onSubmit={handleSearch}>
+            <input
+              autoFocus
+              type="text"
+              placeholder="Search movies..."
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+            />
+          </form>
+        )}
+        <button
+          className="navbar-search-btn"
+          aria-label="Search"
+          onClick={() => setSearchOpen(!searchOpen)}
+        >
+          <SearchIcon />
+        </button>
+      </div>
     </header>
   );
 }

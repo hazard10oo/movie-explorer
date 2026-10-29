@@ -1,48 +1,41 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import useFavorites from "../hooks/useFavorites";
 import MovieCard from "../components/MovieCard";
+import { Link, useSearchParams } from "react-router-dom";
 
 const API_KEY = import.meta.env.VITE_TMDB_KEY;
 
-function Home() {
+function HomeContent({ query }) {
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [query, setQuery] = useState("");
+
   const [heroIndex, setHeroIndex] = useState(0);
   const { favorites, toggleFavorite } = useFavorites();
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(true);
-      setError(null);
+    let url;
 
-      let url;
+    if (query === "") {
+      url = `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}`;
+    } else {
+      url = `https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(query)}`;
+    }
 
-      if (query === "") {
-        url = `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}`;
-      } else {
-        url = `https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(query)}`;
-      }
-
-      fetch(url)
-        .then((res) => {
-          if (!res.ok) throw new Error("Failed to load movies");
-          return res.json();
-        })
-        .then((data) => {
-          setMovies(data.results);
-        })
-        .catch((err) => {
-          setError(err.message);
-        })
-        .finally(() => {
-          setLoading(false);
-        });
-    }, 500);
-
-    return () => clearTimeout(timer);
+    fetch(url)
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to load movies");
+        return res.json();
+      })
+      .then((data) => {
+        setMovies(data.results);
+      })
+      .catch((err) => {
+        setError(err.message);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, [query]);
 
   const heroMovies =
@@ -96,12 +89,7 @@ function Home() {
         </section>
       )}
 
-      <input
-        type="text"
-        placeholder="Search movies..."
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-      />
+      {query && <h2 className="page-title">Results for "{query}"</h2>}
       {loading && <p>Loading...</p>}
       {error && <p>{error}</p>}
       {!loading && !error && movies.length === 0 && <p>No movies found</p>}
@@ -119,6 +107,13 @@ function Home() {
       )}
     </>
   );
+}
+
+function Home() {
+  const [searchParams] = useSearchParams();
+  const query = searchParams.get("q") || "";
+
+  return <HomeContent key={query} query={query} />;
 }
 
 export default Home;
