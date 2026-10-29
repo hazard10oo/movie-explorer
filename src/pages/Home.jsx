@@ -10,6 +10,7 @@ function Home() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [query, setQuery] = useState("");
+  const [heroIndex, setHeroIndex] = useState(0);
   const { favorites, toggleFavorite } = useFavorites();
 
   useEffect(() => {
@@ -44,9 +45,57 @@ function Home() {
     return () => clearTimeout(timer);
   }, [query]);
 
+  const heroMovies =
+    query === "" ? movies.filter((m) => m.backdrop_path).slice(0, 5) : [];
+  const heroCount = heroMovies.length;
+  const activeIndex = heroCount ? heroIndex % heroCount : 0;
+
+  useEffect(() => {
+    if (heroCount < 2) return;
+
+    const timer = setTimeout(() => {
+      setHeroIndex((prev) => (prev + 1) % heroCount);
+    }, 6000);
+
+    return () => clearTimeout(timer);
+  }, [heroIndex, heroCount]);
+
   return (
     <>
-      <h1>Movie Explorer</h1>
+      {!loading && !error && heroCount > 0 && (
+        <section className="hero">
+          {heroMovies.map((m, i) => (
+            <div
+              key={m.id}
+              className={`hero-slide ${i === activeIndex ? "active" : ""}`}
+              style={{
+                backgroundImage: `linear-gradient(90deg, #141414 0%, rgba(20,20,20,0.2) 65%), linear-gradient(0deg, #141414 0%, transparent 35%), url(https://image.tmdb.org/t/p/w1280${m.backdrop_path})`,
+              }}
+            >
+              <div className="hero-content">
+                <span className="hero-label">Trending now</span>
+                <h2>{m.title}</h2>
+                <p>{m.overview}</p>
+                <Link to={`/movie/${m.id}`} className="hero-btn">
+                  View details
+                </Link>
+              </div>
+            </div>
+          ))}
+
+          <div className="hero-dots">
+            {heroMovies.map((m, i) => (
+              <button
+                key={m.id}
+                className={i === activeIndex ? "active" : ""}
+                aria-label={`Show ${m.title}`}
+                onClick={() => setHeroIndex(i)}
+              />
+            ))}
+          </div>
+        </section>
+      )}
+
       <input
         type="text"
         placeholder="Search movies..."
