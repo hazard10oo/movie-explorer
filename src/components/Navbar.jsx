@@ -61,7 +61,13 @@ function Navbar() {
         ))}
 
         <div className="dropdown">
-          <button className="dropdown-btn" onClick={() => setOpen(!open)}>
+          <button
+            className="dropdown-btn"
+            onClick={() => {
+              setOpen(!open);
+              setSearchOpen(false);
+            }}
+          >
             More ▾
           </button>
 
@@ -99,7 +105,10 @@ function Navbar() {
         <button
           className="navbar-search-btn"
           aria-label="Search"
-          onClick={() => setSearchOpen(!searchOpen)}
+          onClick={() => {
+            setSearchOpen(!searchOpen);
+            setOpen(false);
+          }}
         >
           <SearchIcon />
         </button>

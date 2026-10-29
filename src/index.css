@@ -373,14 +373,18 @@ body {
 @media (max-width: 700px) {
   .navbar {
     padding: 0 16px;
-    gap: 14px;
+    gap: 12px;
+  }
+
+  .navbar-logo {
+    font-size: 1.15rem;
   }
 
   .navbar-links {
     gap: 16px;
   }
 
-  .genre-link {
+  .navbar-links > a.genre-link {
     display: none;
   }
 
@@ -396,6 +400,21 @@ body {
     left: 16px;
     right: 16px;
     width: auto;
+  }
+
+  .navbar-search form {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    padding: 10px 16px;
+    background: #1e1e1e;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .navbar-search input {
+    width: 100%;
+    box-sizing: border-box;
   }
 }
 
@@ -598,12 +617,6 @@ body {
 
 .navbar-search input:focus {
   border-color: #f5c518;
-}
-
-@media (max-width: 700px) {
-  .navbar-search input {
-    width: 140px;
-  }
 }
 
 .footer {
