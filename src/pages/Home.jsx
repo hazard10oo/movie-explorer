@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import useFavorites from "../hooks/useFavorites";
+import HeartIcon from "../components/HeartIcon";
 
 const API_KEY = import.meta.env.VITE_TMDB_KEY;
 
@@ -62,20 +63,32 @@ function Home() {
               <Link to={`/movie/${movie.id}`}>
                 {movie.poster_path ? (
                   <img
-                    src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                    src={`https://image.tmdb.org/t/p/w342${movie.poster_path}`}
                     alt={movie.title}
+                    loading="lazy"
                   />
                 ) : (
                   <div className="no-poster">No poster</div>
                 )}
-                <h3>{movie.title}</h3>
+                <div className="card-overlay">
+                  <h3>{movie.title}</h3>
+                </div>
               </Link>
-              <button onClick={() => toggleFavorite(movie)}>
-                {favorites.some((f) => f.id === movie.id) ? "❤️" : "🤍"}
-              </button>
-              <p>
+
+              <span className="rating-badge">
+                <span className="star">★</span>{" "}
                 {movie.vote_average ? movie.vote_average.toFixed(1) : "N/A"}
-              </p>
+              </span>
+
+              <button
+                className={`fav-btn-card ${
+                  favorites.some((f) => f.id === movie.id) ? "active" : ""
+                }`}
+                aria-label="Toggle favorite"
+                onClick={() => toggleFavorite(movie)}
+              >
+                <HeartIcon filled={favorites.some((f) => f.id === movie.id)} />
+              </button>
             </div>
           ))}
         </div>

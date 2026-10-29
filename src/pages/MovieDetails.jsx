@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import useFavorites from "../hooks/useFavorites";
+import HeartIcon from "../components/HeartIcon";
 
 const API_KEY = import.meta.env.VITE_TMDB_KEY;
 
@@ -88,10 +89,14 @@ function MovieDetails() {
 
                 <button
                   className="fav-btn"
-                  aria-label="Toggle favorite"
                   onClick={() => toggleFavorite(movie)}
                 >
-                  {favorites.some((f) => f.id === movie.id) ? "❤️" : "🤍"}
+                  <HeartIcon
+                    filled={favorites.some((f) => f.id === movie.id)}
+                  />
+                  {favorites.some((f) => f.id === movie.id)
+                    ? "In favorites"
+                    : "Add to favorites"}
                 </button>
 
                 <div className="genres">

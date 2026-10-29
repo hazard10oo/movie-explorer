@@ -8,25 +8,98 @@ body {
 
 .movies-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
   gap: 20px;
-  padding: 20px;
+  padding: 20px 40px;
 }
 
 .movie-card {
-  background: #1e1e1e;
-  border-radius: 8px;
+  position: relative;
+  border-radius: 12px;
   overflow: hidden;
-  transition: transform 0.2s;
+  background: #1e1e1e;
+  transition:
+    transform 0.25s,
+    box-shadow 0.25s;
 }
 
 .movie-card img {
+  display: block;
   width: 100%;
-  height: auto;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
 }
 
 .movie-card:hover {
-  transform: scale(1.05);
+  transform: translateY(-6px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+}
+
+.card-overlay {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 40px 12px 14px;
+  text-align: left;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.9));
+}
+
+.card-overlay h3 {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.3;
+}
+
+.rating-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(0, 0, 0, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(4px);
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+.rating-badge .star {
+  color: #f5c518;
+}
+
+.fav-btn-card {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(4px);
+  color: #fff;
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    color 0.2s,
+    transform 0.2s;
+}
+
+.fav-btn-card:hover {
+  background: rgba(0, 0, 0, 0.85);
+  transform: scale(1.1);
+}
+
+.fav-btn-card.active {
+  color: #ff4d6d;
 }
 
 .no-poster {
@@ -40,6 +113,11 @@ body {
   font-size: 1.2em;
 }
 
+.movie-card .no-poster {
+  height: auto;
+  aspect-ratio: 2 / 3;
+}
+
 .movie-card button {
   background: none;
   border: none;
@@ -49,7 +127,8 @@ body {
 }
 
 .movie-card a {
-  color: inherit;
+  display: block;
+  color: #fff;
   text-decoration: none;
 }
 
@@ -139,14 +218,29 @@ body {
   }
 }
 
+@media (max-width: 600px) {
+  .movies-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    padding: 16px;
+  }
+}
+
 .fav-btn {
-  background: none;
-  border: 1px solid #555;
-  border-radius: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 24px;
   color: #fff;
-  padding: 6px 16px;
+  padding: 8px 18px;
   font-size: 1rem;
   cursor: pointer;
+}
+
+.fav-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
 }
 
 .details-backdrop {
