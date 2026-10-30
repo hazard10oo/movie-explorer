@@ -4,6 +4,7 @@ import Home from "./pages/Home";
 import MovieDetails from "./pages/MovieDetails";
 import GenrePage from "./pages/GenrePage";
 import Footer from "./components/Footer";
+import Favorites from "./pages/Favorites";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/movie/:id" element={<MovieDetails />} />
         <Route path="/genre/:id" element={<GenrePage />} />
+        <Route path="/favorites" element={<Favorites />} />
       </Routes>
       <Footer />
     </>

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import SearchIcon from "./SearchIcon";
+import HeartIcon from "./HeartIcon";
 
 const API_KEY = import.meta.env.VITE_TMDB_KEY;
 const FEATURED = ["Action", "Comedy", "Drama", "Horror"];
@@ -90,28 +91,38 @@ function Navbar() {
         </div>
       </nav>
 
-      <div className="navbar-search">
-        {searchOpen && (
-          <form onSubmit={handleSearch}>
-            <input
-              autoFocus
-              type="text"
-              placeholder="Search movies..."
-              value={text}
-              onChange={(e) => setText(e.target.value)}
-            />
-          </form>
-        )}
-        <button
+      <div className="navbar-right">
+        <NavLink
+          to="/favorites"
           className="navbar-search-btn"
-          aria-label="Search"
-          onClick={() => {
-            setSearchOpen(!searchOpen);
-            setOpen(false);
-          }}
+          aria-label="Favorites"
         >
-          <SearchIcon />
-        </button>
+          <HeartIcon />
+        </NavLink>
+
+        <div className="navbar-search">
+          {searchOpen && (
+            <form onSubmit={handleSearch}>
+              <input
+                autoFocus
+                type="text"
+                placeholder="Search movies..."
+                value={text}
+                onChange={(e) => setText(e.target.value)}
+              />
+            </form>
+          )}
+          <button
+            className="navbar-search-btn"
+            aria-label="Search"
+            onClick={() => {
+              setSearchOpen(!searchOpen);
+              setOpen(false);
+            }}
+          >
+            <SearchIcon />
+          </button>
+        </div>
       </div>
     </header>
   );

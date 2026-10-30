@@ -646,3 +646,36 @@ body {
     padding: 24px 16px;
   }
 }
+
+.empty-state {
+  padding: 60px 20px;
+  color: #aaa;
+}
+
+@media (max-width: 700px) {
+  .navbar-search {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    padding: 10px 16px;
+    background: #1e1e1e;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .navbar-search input {
+    width: 100%;
+    box-sizing: border-box;
+  }
+}
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.navbar-search-btn.active {
+  color: #ff4d6d;
+  border-color: rgba(255, 77, 109, 0.5);
+}
