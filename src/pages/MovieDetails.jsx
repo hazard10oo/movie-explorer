@@ -13,7 +13,9 @@ function MovieDetails() {
   const { favorites, toggleFavorite } = useFavorites();
 
   useEffect(() => {
-    fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=${API_KEY}`)
+    fetch(
+      `https://api.themoviedb.org/3/movie/${id}?api_key=${API_KEY}&append_to_response=credits`,
+    )
       .then((res) => {
         if (!res.ok) throw new Error("Failed to load movie details");
         return res.json();
@@ -45,6 +47,7 @@ function MovieDetails() {
   const year = movie.release_date ? movie.release_date.slice(0, 4) : null;
   const runtime = movie.runtime ? `${movie.runtime} min` : null;
   const meta = [year, runtime].filter(Boolean).join(" • ");
+  const cast = movie.credits?.cast?.slice(0, 12) || [];
   const backdropUrl = movie.backdrop_path
     ? `https://image.tmdb.org/t/p/w1280${movie.backdrop_path}`
     : null;
@@ -109,6 +112,28 @@ function MovieDetails() {
                 <p>{movie.overview || "No overview available."}</p>
               </div>
             </div>
+            {cast.length > 0 && (
+              <section className="cast">
+                <h2>Cast</h2>
+                <div className="cast-row">
+                  {cast.map((person) => (
+                    <div key={person.credit_id} className="cast-card">
+                      {person.profile_path ? (
+                        <img
+                          src={`https://image.tmdb.org/t/p/w185${person.profile_path}`}
+                          alt={person.name}
+                          loading="lazy"
+                        />
+                      ) : (
+                        <div className="cast-placeholder">{person.name[0]}</div>
+                      )}
+                      <p className="cast-name">{person.name}</p>
+                      <p className="cast-character">{person.character}</p>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
           </div>
         }
       </div>

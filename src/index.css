@@ -667,3 +667,57 @@ body {
   color: #ff4d6d;
   border-color: rgba(255, 77, 109, 0.5);
 }
+
+.cast {
+  margin-top: 40px;
+  text-align: left;
+}
+
+.cast h2 {
+  font-size: 1.4rem;
+  margin: 0 0 16px;
+}
+
+.cast-row {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  padding-bottom: 12px;
+  scroll-snap-type: x proximity;
+}
+
+.cast-card {
+  flex: 0 0 120px;
+  scroll-snap-align: start;
+}
+
+.cast-card img,
+.cast-placeholder {
+  display: block;
+  width: 120px;
+  height: 160px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.cast-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #2a2a2a;
+  color: #888;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.cast-name {
+  margin: 8px 0 2px;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.cast-character {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #999;
+}
