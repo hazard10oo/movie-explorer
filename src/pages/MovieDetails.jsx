@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams, Link } from "react-router-dom";
 import useFavorites from "../hooks/useFavorites";
 import HeartIcon from "../components/HeartIcon";
@@ -11,6 +11,7 @@ function MovieDetails() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { favorites, toggleFavorite } = useFavorites();
+  const castRef = useRef(null);
 
   useEffect(() => {
     fetch(
@@ -48,6 +49,11 @@ function MovieDetails() {
   const runtime = movie.runtime ? `${movie.runtime} min` : null;
   const meta = [year, runtime].filter(Boolean).join(" • ");
   const cast = movie.credits?.cast?.slice(0, 12) || [];
+  function scrollCast(direction) {
+    const row = castRef.current;
+    if (!row) return;
+    row.scrollBy({ left: direction * 480, behavior: "smooth" });
+  }
   const backdropUrl = movie.backdrop_path
     ? `https://image.tmdb.org/t/p/w1280${movie.backdrop_path}`
     : null;
@@ -114,23 +120,70 @@ function MovieDetails() {
             </div>
             {cast.length > 0 && (
               <section className="cast">
-                <h2>Cast</h2>
-                <div className="cast-row">
-                  {cast.map((person) => (
-                    <div key={person.credit_id} className="cast-card">
-                      {person.profile_path ? (
-                        <img
-                          src={`https://image.tmdb.org/t/p/w185${person.profile_path}`}
-                          alt={person.name}
-                          loading="lazy"
-                        />
-                      ) : (
-                        <div className="cast-placeholder">{person.name[0]}</div>
-                      )}
-                      <p className="cast-name">{person.name}</p>
-                      <p className="cast-character">{person.character}</p>
-                    </div>
-                  ))}
+                <h2 className="section-title">Top Cast</h2>
+
+                <div className="cast-wrapper">
+                  <button
+                    className="cast-arrow left"
+                    aria-label="Scroll left"
+                    onClick={() => scrollCast(-1)}
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      width="22"
+                      height="22"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <polyline points="15 18 9 12 15 6" />
+                    </svg>
+                  </button>
+
+                  <div className="cast-row" ref={castRef}>
+                    {cast.map((person) => (
+                      <Link
+                        key={person.credit_id}
+                        to={`/person/${person.id}`}
+                        className="cast-card"
+                      >
+                        {person.profile_path ? (
+                          <img
+                            src={`https://image.tmdb.org/t/p/w185${person.profile_path}`}
+                            alt={person.name}
+                            loading="lazy"
+                          />
+                        ) : (
+                          <div className="cast-placeholder">
+                            {person.name[0]}
+                          </div>
+                        )}
+                        <p className="cast-name">{person.name}</p>
+                        <p className="cast-character">{person.character}</p>
+                      </Link>
+                    ))}
+                  </div>
+
+                  <button
+                    className="cast-arrow right"
+                    aria-label="Scroll right"
+                    onClick={() => scrollCast(1)}
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      width="22"
+                      height="22"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <polyline points="9 18 15 12 9 6" />
+                    </svg>
+                  </button>
                 </div>
               </section>
             )}
