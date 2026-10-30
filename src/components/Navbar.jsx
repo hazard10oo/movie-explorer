@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import SearchIcon from "./SearchIcon";
 import HeartIcon from "./HeartIcon";
@@ -12,6 +12,8 @@ function Navbar() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [text, setText] = useState("");
   const navigate = useNavigate();
+  const dropdownRef = useRef(null);
+  const searchRef = useRef(null);
 
   function handleSearch(e) {
     e.preventDefault();
@@ -34,6 +36,32 @@ function Navbar() {
       .catch(() => {
         setGenres([]);
       });
+  }, []);
+
+  useEffect(() => {
+    function handleOutside(e) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setOpen(false);
+      }
+      if (searchRef.current && !searchRef.current.contains(e.target)) {
+        setSearchOpen(false);
+      }
+    }
+
+    function handleEscape(e) {
+      if (e.key === "Escape") {
+        setOpen(false);
+        setSearchOpen(false);
+      }
+    }
+
+    document.addEventListener("pointerdown", handleOutside);
+    document.addEventListener("keydown", handleEscape);
+
+    return () => {
+      document.removeEventListener("pointerdown", handleOutside);
+      document.removeEventListener("keydown", handleEscape);
+    };
   }, []);
 
   const featured = FEATURED.map((name) =>
@@ -61,7 +89,7 @@ function Navbar() {
           </NavLink>
         ))}
 
-        <div className="dropdown">
+        <div className="dropdown" ref={dropdownRef}>
           <button
             className="dropdown-btn"
             onClick={() => {
@@ -100,7 +128,7 @@ function Navbar() {
           <HeartIcon />
         </NavLink>
 
-        <div className="navbar-search">
+        <div className="navbar-search" ref={searchRef}>
           {searchOpen && (
             <form onSubmit={handleSearch}>
               <input
